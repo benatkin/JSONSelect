@@ -10,11 +10,15 @@
   },
   "main": "src/jsonselect",
   "engines": {
-    "node": "~v0.4.8-pre"
+    "node": ">v0.4.1"
   },
   "dependencies": {},
   "devDependencies": {
+    "expresso" : ">0.7.6",
     "jsdom" : "0.2.0",
     "xmlhttprequest" : "*"
+  },
+  "scripts": {
+    "test": "expresso src/test/run.js"
   }
 }
