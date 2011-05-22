@@ -6,6 +6,7 @@ browser = require("jsdom/lib/jsdom/browser/index"),
 fs      = require('fs'),
 xhr     = require('xmlhttprequest'),
 vm      = require('vm'),
+path    = require('path'),
 assert  = require('assert'),
 files = [
   __dirname +'/lex_test.html',
@@ -36,16 +37,17 @@ scripts = [
 })(browser.createWindow);
 
 files.forEach(function(file) {
-  exports['test ' + file] = function() {
-    jsdom.env(file, scripts, function(errors, window) {
-      window.$('.doctest').each(function(k, v) {
-        var el = window.$(v);
-        el.text(el.text().replace(/&gt;/g,'>').replace(/&lt;/g,'<'))
-      });
-
-      window.doctest();
-
-      assert.equal(parseInt(window.$('.failed').text(), 10), 0);
+  jsdom.env(file, scripts, function(errors, window) {
+    window.$('.doctest').each(function(k, v) {
+      var el = window.$(v);
+      el.text(el.text().replace(/&gt;/g,'>').replace(/&lt;/g,'<'))
     });
-  };
+
+    window.doctest();
+
+    var failed = parseInt(window.$('.failed').text(), 10);
+    exports['test ' + path.basename(file)] = function() {
+      assert.equal(failed, 0);
+    };
+  });
 });
